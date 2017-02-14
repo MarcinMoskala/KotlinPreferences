@@ -30,7 +30,7 @@ var SharedPreferences.experience: Float? by bindToPreferenceFieldNullable()
 var SharedPreferences.className: String? by bindToPreferenceFieldNullable()
 ```
 
-Can be keep also other objects: 
+Can also keep other objects: 
 ```kotlin
 var SharedPreferences.character: Character by bindToPreferenceFieldNullable()
 var SharedPreferences.savedGame: Game? by bindToPreferenceFieldNullable()
