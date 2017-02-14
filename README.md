@@ -3,19 +3,19 @@ Kotlin Android Library, that makes preference usage simple and fun.
 
 [![](https://jitpack.io/v/marcinmoskala/kotlinpreferences.svg)](https://jitpack.io/#marcinmoskala/kotlinpreferences)
 
-With KotlinPreferences, all you can define different preference fields this way:
+With KotlinPreferences, you can define different preference fields this way:
 
 ```kotlin
 var SharedPreferences.canEatPie: Boolean by bindToPreferenceField(true)
 ```
 
-Usage is like usage of any property:
+And use it like any SharedPreference property:
 ```kotlin
 preferences.canEatPie = true
 if(preferences.canEatPie) //...
 ```
 
-Here are other preference definition examples: (see [full example](https://github.com/MarcinMoskala/KotlinPreferences/blob/master/kotlinpreferences-lib/src/androidTest/java/com/marcinmoskala/kotlinpreferences/ExampleConfig.kt) and [usage](https://github.com/MarcinMoskala/KotlinPreferences/tree/master/kotlinpreferences-lib/src/androidTest/java/com/marcinmoskala/kotlinpreferences))
+There are different ways to define this properties. Here are some possibilities: (see full example [here](https://github.com/MarcinMoskala/KotlinPreferences/blob/master/kotlinpreferences-lib/src/androidTest/java/com/marcinmoskala/kotlinpreferences/ExampleConfig.kt) and usage [here](https://github.com/MarcinMoskala/KotlinPreferences/tree/master/kotlinpreferences-lib/src/androidTest/java/com/marcinmoskala/kotlinpreferences))
 
 With default value: 
 ```kotlin
@@ -30,18 +30,12 @@ var SharedPreferences.experience: Float? by bindToPreferenceFieldNullable()
 var SharedPreferences.className: String? by bindToPreferenceFieldNullable()
 ```
 
-Can be applayed to any other objects: 
+Can be keep also other objects: 
 ```kotlin
 var SharedPreferences.character: Character by bindToPreferenceFieldNullable()
 var SharedPreferences.savedGame: Game? by bindToPreferenceFieldNullable()
 ```
-Node that this objects are serializet do string using Gson. If they include some types that needs some serializers, then you need to set deffenetg gson deferializer. Instructions [here]().
-
-And then they, this properties can be used like a ShaprePreference property:
-```kotlin
-preferences.character = Character("Marcin", "Human", "Wizzard")
-println(preferences.character.name)
-```
+Node that this objects are serialized do string using Gson. If they include some, types that needs some serializers, then you need to set gson with converters. Instructions [here](https://github.com/MarcinMoskala/KotlinPreferences/wiki/Setting-gson).
 
 Also keys can be specyfied: (this is important to make values immtuable to property name in case of changes in the app)
 ```kotlin
