@@ -2,6 +2,8 @@
 Kotlin Android Library, that makes preference usage simple and fun.
 
 [![](https://jitpack.io/v/marcinmoskala/kotlinpreferences.svg)](https://jitpack.io/#marcinmoskala/kotlinpreferences)
+[![Build Status](https://travis-ci.org/MarcinMoskala/KotlinPreferences.svg?branch=master)](https://travis-ci.org/MarcinMoskala/KotlinPreferences)
+[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
 With KotlinPreferences, you can define different preference fields this way:
 
