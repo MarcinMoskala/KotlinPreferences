@@ -52,7 +52,7 @@ To add KotlinPreferences to the project, add in build.gradle file:
 
 ```groovy
 dependencies {
-    compile 'com.github.marcinmoskala:kotlinpreferences:0.10'
+    compile 'com.github.marcinmoskala:kotlinpreferences:1.00'
 }
 ```
 
