@@ -6,6 +6,8 @@ Kotlin Android Library, that makes preference usage simple and fun.
 [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
+KotlinPreferences now have a [brother](https://github.com/MarcinMoskala/KotlinPreferencesObject).
+
 With KotlinPreferences, you can define different preference fields this way:
 
 ```kotlin
