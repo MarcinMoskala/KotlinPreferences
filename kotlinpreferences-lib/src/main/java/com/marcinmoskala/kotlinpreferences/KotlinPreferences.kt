@@ -1,86 +1,34 @@
 package com.marcinmoskala.kotlinpreferences
 
 import android.content.SharedPreferences
+import com.marcinmoskala.kotlinpreferences.bindings.PreferenceFieldBinder
+import com.marcinmoskala.kotlinpreferences.bindings.PreferenceFieldBinderNullable
+import com.marcinmoskala.kotlinpreferences.bindings.PropertyWithBackup
+import com.marcinmoskala.kotlinpreferences.bindings.PropertyWithBackupNullable
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-inline fun <reified T : Any> bindToPreferenceField(default: T?, key: String? = null) = PreferenceFieldBinder(T::class, default, key)
+inline fun <reified T : Any> bindToPreferenceField(default: T?, key: String? = null): ReadWriteProperty<SharedPreferences, T>
+        = bindToPreferenceField(T::class, default, key)
 
-inline fun <reified T : Any> bindToPreferenceFieldNullable(key: String? = null) = PreferenceFieldBinderNullable(T::class, key)
+inline fun <reified T : Any> bindToPreferenceFieldNullable(key: String? = null): ReadWriteProperty<SharedPreferences, T?>
+        = bindToPreferenceFieldNullable(T::class, key)
 
-@Suppress("UNCHECKED_CAST")
-class PreferenceFieldBinder<T : Any>(val clazz: KClass<T>, val default: T?, val key: String? = null) : ReadWriteProperty<SharedPreferences, T> {
+inline fun <reified T : Any> bindAsPropertyWithBackup(default: T?, key: String? = null): ReadWriteProperty<SharedPreferences, T>
+        = bindAsPropertyWithBackup(T::class, default, key)
 
-    override operator fun getValue(thisRef: SharedPreferences, property: KProperty<*>): T = readValue(property, thisRef)
+inline fun <reified T : Any> bindAsPropertyWithBackupNullable(key: String? = null): ReadWriteProperty<SharedPreferences, T?>
+        = bindAsPropertyWithBackupNullable(T::class, key)
 
-    override fun setValue(thisRef: SharedPreferences, property: KProperty<*>, value: T) {
-        thisRef.edit().apply {
-            when (clazz.simpleName) {
-                "Long" -> putLong(getKey(property), value as Long)
-                "Int" -> putInt(getKey(property), value as Int)
-                "String" -> putString(getKey(property), value as String?)
-                "Boolean" -> putBoolean(getKey(property), value as Boolean)
-                "Float" -> putFloat(getKey(property), value as Float)
-                else -> putString(getKey(property), value.toJson())
-            }
-        }.apply()
-    }
+fun <T : Any> bindToPreferenceField(clazz: KClass<T>, default: T?, key: String? = null): ReadWriteProperty<SharedPreferences, T>
+        = PreferenceFieldBinder(clazz, default, key)
 
-    private fun readValue(property: KProperty<*>, thisRef: SharedPreferences): T = when (clazz.simpleName) {
-        "Long" -> thisRef.getLong(getKey(property), default as Long) as T
-        "Int" -> thisRef.getInt(getKey(property), default as Int) as T
-        "String" -> thisRef.getString(getKey(property), default as? String) as T
-        "Boolean" -> thisRef.getBoolean(getKey(property), default as Boolean) as T
-        "Float" -> thisRef.getFloat(getKey(property), default as Float) as T
-        else -> thisRef.getString(getKey(property), default?.toJson()).fromJson(clazz)
-    }
+fun <T : Any> bindToPreferenceFieldNullable(clazz: KClass<T>, key: String? = null): ReadWriteProperty<SharedPreferences, T?>
+        = PreferenceFieldBinderNullable(clazz, key)
 
-    private fun getKey(property: KProperty<*>) = key ?: "${property.name}Key"
-}
+fun <T : Any> bindAsPropertyWithBackup(clazz: KClass<T>, default: T?, key: String? = null): ReadWriteProperty<SharedPreferences, T>
+        = PropertyWithBackup(clazz, default, key)
 
-@Suppress("UNCHECKED_CAST")
-class PreferenceFieldBinderNullable<T : Any>(val clazz: KClass<T>, val key: String? = null) : ReadWriteProperty<SharedPreferences, T?> {
-
-    override operator fun getValue(thisRef: SharedPreferences, property: KProperty<*>): T? = readValue(property, thisRef)
-
-    override fun setValue(thisRef: SharedPreferences, property: KProperty<*>, value: T?) {
-        if (value == null) {
-            removeValue(property, thisRef)
-        } else {
-            saveValue(property, thisRef, value)
-        }
-    }
-
-    private fun readValue(property: KProperty<*>, thisRef: SharedPreferences): T? {
-        val key = getKey(property)
-        if (!thisRef.contains(key)) return null
-        return when (clazz.simpleName) {
-            "Long" -> thisRef.getLong(key, -1L) as? T
-            "Int" -> thisRef.getInt(key, -1) as? T
-            "String" -> thisRef.getString(key, null) as? T
-            "Boolean" -> thisRef.getBoolean(key, false) as? T
-            "Float" -> thisRef.getFloat(getKey(property), -1.0F) as T
-            else -> thisRef.getString(key, null)?.fromJson(clazz)
-        }
-    }
-
-    private fun removeValue(property: KProperty<*>, thisRef: SharedPreferences) {
-        thisRef.edit().remove(getKey(property)).apply()
-    }
-
-    private fun saveValue(property: KProperty<*>, thisRef: SharedPreferences, value: T?) {
-        thisRef.edit().apply {
-            when (clazz.simpleName) {
-                "Long" -> putLong(getKey(property), value as Long)
-                "Int" -> putInt(getKey(property), value as Int)
-                "String" -> putString(getKey(property), value as String?)
-                "Boolean" -> putBoolean(getKey(property), value as Boolean)
-                "Float" -> putFloat(getKey(property), value as Float)
-                else -> putString(getKey(property), value.toJson())
-            }
-        }.apply()
-    }
-
-    private fun getKey(property: KProperty<*>) = key ?: "${property.name}Key"
-}
+fun <T : Any> bindAsPropertyWithBackupNullable(clazz: KClass<T>, key: String? = null): ReadWriteProperty<SharedPreferences, T?>
+        = PropertyWithBackupNullable(clazz, key)
