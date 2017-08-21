@@ -16,7 +16,7 @@ internal fun SharedPreferences.Editor.putValue(clazz: KClass<*>, value: Any, key
     }
 }
 
-internal inline fun <T: Any> SharedPreferences.getValue(clazz: KClass<*>, default: T?, key: String): T = when (clazz.simpleName) {
+internal fun <T: Any> SharedPreferences.getValue(clazz: KClass<*>, default: T?, key: String): T = when (clazz.simpleName) {
     "Long" -> getLong(key, default as Long)
     "Int" -> getInt(key, default as Int)
     "String" -> getString(key, default as? String)
