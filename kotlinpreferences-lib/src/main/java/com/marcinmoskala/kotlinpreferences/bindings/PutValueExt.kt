@@ -1,6 +1,7 @@
 package com.marcinmoskala.kotlinpreferences.bindings
 
 import android.content.SharedPreferences
+import com.marcinmoskala.kotlinpreferences.fromJson
 import com.marcinmoskala.kotlinpreferences.toJson
 import kotlin.reflect.KClass
 
@@ -14,3 +15,12 @@ internal fun SharedPreferences.Editor.putValue(clazz: KClass<*>, value: Any, key
         else -> putString(key, value.toJson())
     }
 }
+
+internal inline fun <T: Any> SharedPreferences.getValue(clazz: KClass<*>, default: T?, key: String): T = when (clazz.simpleName) {
+    "Long" -> getLong(key, default as Long)
+    "Int" -> getInt(key, default as Int)
+    "String" -> getString(key, default as? String)
+    "Boolean" -> getBoolean(key, default as Boolean)
+    "Float" -> getFloat(key, default as Float)
+    else -> getString(key, default?.toJson()).fromJson(clazz)
+} as T

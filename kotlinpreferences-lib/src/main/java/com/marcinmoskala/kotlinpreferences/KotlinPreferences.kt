@@ -1,13 +1,12 @@
 package com.marcinmoskala.kotlinpreferences
 
 import android.content.SharedPreferences
-import com.marcinmoskala.kotlinpreferences.bindings.PreferenceFieldBinder
-import com.marcinmoskala.kotlinpreferences.bindings.PreferenceFieldBinderNullable
+import com.marcinmoskala.kotlinpreferences.bindings.PreferenceFieldDelegate
+import com.marcinmoskala.kotlinpreferences.bindings.PreferenceFieldDelegateNullable
 import com.marcinmoskala.kotlinpreferences.bindings.PropertyWithBackup
 import com.marcinmoskala.kotlinpreferences.bindings.PropertyWithBackupNullable
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
 
 inline fun <reified T : Any> bindToPreferenceField(default: T?, key: String? = null): ReadWriteProperty<SharedPreferences, T>
         = bindToPreferenceField(T::class, default, key)
@@ -22,10 +21,10 @@ inline fun <reified T : Any> bindAsPropertyWithBackupNullable(key: String? = nul
         = bindAsPropertyWithBackupNullable(T::class, key)
 
 fun <T : Any> bindToPreferenceField(clazz: KClass<T>, default: T?, key: String? = null): ReadWriteProperty<SharedPreferences, T>
-        = PreferenceFieldBinder(clazz, default, key)
+        = PreferenceFieldDelegate(clazz, default, key)
 
 fun <T : Any> bindToPreferenceFieldNullable(clazz: KClass<T>, key: String? = null): ReadWriteProperty<SharedPreferences, T?>
-        = PreferenceFieldBinderNullable(clazz, key)
+        = PreferenceFieldDelegateNullable(clazz, key)
 
 fun <T : Any> bindAsPropertyWithBackup(clazz: KClass<T>, default: T?, key: String? = null): ReadWriteProperty<SharedPreferences, T>
         = PropertyWithBackup(clazz, default, key)
