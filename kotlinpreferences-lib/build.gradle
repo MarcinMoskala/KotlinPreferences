@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'com.github.dcendents.android-maven'
 
-group='com.github.felixdivo.kotlinpreferences'
+group='com.github.felixdivo'
 
 android {
     compileSdkVersion 25
