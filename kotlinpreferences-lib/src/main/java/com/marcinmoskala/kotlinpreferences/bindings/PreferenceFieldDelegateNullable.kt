@@ -8,7 +8,11 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-internal open class PreferenceFieldDelegateNullable<T : Any>(val clazz: KClass<T>, val key: String? = null) : ReadWriteProperty<SharedPreferences, T?> {
+internal open class PreferenceFieldDelegateNullable<T : Any>(
+        private val clazz: KClass<T>,
+        private val key: String? = null,
+        private val applyAsync: Boolean = true
+) : ReadWriteProperty<SharedPreferences, T?> {
 
     override operator fun getValue(thisRef: SharedPreferences, property: KProperty<*>): T? = readValue(thisRef, property)
 
@@ -36,13 +40,19 @@ internal open class PreferenceFieldDelegateNullable<T : Any>(val clazz: KClass<T
     }
 
     private fun removeValue(pref: SharedPreferences, property: KProperty<*>) {
-        pref.edit()
-                .remove(getKey(property))
-                .apply()
+        val editor = pref.edit().remove(getKey(property))
+        if (applyAsync)
+            editor.apply()
+        else
+            editor.commit()
     }
 
     private fun saveValue(pref: SharedPreferences, property: KProperty<*>, value: T) {
-        pref.edit().apply { putValue(clazz, value, getKey(property)) }.apply()
+        val editor = pref.edit().apply { putValue(clazz, value, getKey(property)) }
+        if (applyAsync)
+            editor.apply()
+        else
+            editor.commit()
     }
 
     private fun getKey(property: KProperty<*>) = key ?: "${property.name}Key"

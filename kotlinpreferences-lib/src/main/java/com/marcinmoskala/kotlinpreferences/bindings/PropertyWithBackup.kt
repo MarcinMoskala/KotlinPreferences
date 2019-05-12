@@ -5,7 +5,12 @@ import kotlin.concurrent.thread
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-internal class PropertyWithBackup<T : Any>(clazz: KClass<T>, default: T?, key: String?) : PreferenceFieldDelegate<T>(clazz, default, key) {
+internal class PropertyWithBackup<T : Any>(
+        clazz: KClass<T>,
+        default: T?,
+        key: String?,
+        applyAsync: Boolean = true)
+    : PreferenceFieldDelegate<T>(clazz, default, key, applyAsync) {
 
     var field: T? = null
 
@@ -13,7 +18,7 @@ internal class PropertyWithBackup<T : Any>(clazz: KClass<T>, default: T?, key: S
             field ?: super.getValue(thisRef, property).apply { field = this }
 
     override fun setValue(thisRef: SharedPreferences, property: KProperty<*>, value: T) {
-        if(value == field) return
+        if (value == field) return
         field = value
         thread {
             super.setValue(thisRef, property, value)

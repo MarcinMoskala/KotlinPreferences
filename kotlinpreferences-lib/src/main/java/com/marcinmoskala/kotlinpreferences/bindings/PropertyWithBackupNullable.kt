@@ -5,7 +5,11 @@ import kotlin.concurrent.thread
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-internal class PropertyWithBackupNullable<T : Any>(clazz: KClass<T>, key: String? = null) : PreferenceFieldDelegateNullable<T>(clazz, key) {
+internal class PropertyWithBackupNullable<T : Any>(
+        clazz: KClass<T>,
+        key: String? = null,
+        applyAsync: Boolean = true
+) : PreferenceFieldDelegateNullable<T>(clazz, key, applyAsync) {
 
     var propertySet: Boolean = false
     var field: T? = null
@@ -19,7 +23,7 @@ internal class PropertyWithBackupNullable<T : Any>(clazz: KClass<T>, key: String
 
     override fun setValue(thisRef: SharedPreferences, property: KProperty<*>, value: T?) {
         propertySet = true
-        if(value == field) return
+        if (value == field) return
         field = value
         thread {
             super.setValue(thisRef, property, value)
